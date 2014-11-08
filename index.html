@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Quadtree</title>
+    <style>
+        .noselect {
+            cursor: default;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -khtml-user-select: none;
+            -ms-user-select: none;
+        }
+        #maincanvas {
+            display: inline-block;
+            border: 1px solid black;
+            vertical-align: top;
+        }
+        #controls {
+            display: inline-block;
+            border: 1px solid black;
+            vertical-align: top;
+        }
+        .container {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <canvas id="maincanvas" class="noselect"></canvas>
+        <div id="controls">
+            <button onclick="doStart()">Start</button><br>
+            <button onclick="doStop()">Stop</button><br>
+            <button onclick="doReset()">Reset</button>
+        </div>
+    </div>
+
+    <script src="lib/dat.gui.min.js"></script>
+    <script src="lib/nano-amd.js"></script>
+
+
+    <script src="js/math/vec.js"></script>
+    <script src="js/math/Geom.js"></script>
+    <script src="js/math/NBox.js"></script>
+    <script src="js/math/NBoxTree.js"></script>
+    <script src="js/vendor/datgui.js"></script>
+    <script src="js/utils/time.js"></script>
+    <script src="js/utils/imgLoad.js"></script>
+    <script src="js/utils/imgConvert.js"></script>
+    <script src="js/utils/Mouse.js"></script>
+    <script src="js/utils/Interval.js"></script>
+    <script src="js/utils/utils.js"></script>
+    <script src="js/planning/maps.js"></script>
+
+    <script src="js/app/drawing.js"></script>
+    <script src="js/App.js"></script>
+
+    <script>
+        var App = require('App');
+        var app = new App();
+        var doStart = app.doStart;
+        var doStop = app.doStop;
+        var doReset = app.doReset;
+    </script>
+
+</body>
+</html>
