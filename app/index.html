@@ -33,7 +33,9 @@
         <div id="controls">
             <button onclick="doStart()">Start</button><br>
             <button onclick="doStop()">Stop</button><br>
-            <button onclick="doReset()">Reset</button>
+            <button onclick="doReset()">Reset</button><br>
+            <div>Samples took: <span id="samplesTook"></span></div>
+            <div>Found cost: <span id="solutionCost"></span></div>
         </div>
     </div>
 
@@ -45,14 +47,18 @@
     <script src="js/math/Geom.js"></script>
     <script src="js/math/NBox.js"></script>
     <script src="js/math/NBoxTree.js"></script>
+
     <script src="js/vendor/datgui.js"></script>
+
     <script src="js/utils/time.js"></script>
     <script src="js/utils/imgLoad.js"></script>
     <script src="js/utils/imgConvert.js"></script>
     <script src="js/utils/Mouse.js"></script>
     <script src="js/utils/Interval.js"></script>
     <script src="js/utils/utils.js"></script>
+
     <script src="js/planning/maps.js"></script>
+    <script src="js/planning/rrt_inc.js"></script>
 
     <script src="js/app/drawing.js"></script>
     <script src="js/App.js"></script>

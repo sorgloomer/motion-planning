@@ -4,7 +4,7 @@
 
 define('Mouse', [ 'time' ], function(time) {
 
-    function noop() { return false; }
+    function returnFalse() { return false; }
 
     var timeDelta = 5;
     function Mouse(domElement) {
@@ -19,7 +19,8 @@ define('Mouse', [ 'time' ], function(time) {
                 var py = self.py = self.y;
                 var x = self.x = e.offsetX;
                 var y = self.y = e.offsetY;
-                if (self.buttons && self.ondrag) {
+
+                if (buttons && self.ondrag) {
                     self.ondrag(buttons, x, y, px, py);
                 }
                 if (self.onmove) {
@@ -46,16 +47,26 @@ define('Mouse', [ 'time' ], function(time) {
                 self.onup(button, x, y, buttons);
             }
         }
+        function onMouseOver() {
+            self.isin = true;
+        }
+        function onMouseOut() {
+            self.buttons = 0;
+            self.isin = false;
+        }
 
         domElement.onmousemove = onMouseMove;
         domElement.onmousedown = onMouseDown;
         domElement.onmouseup = onMouseUp;
-        domElement.oncontextmenu = noop;
+        domElement.onmouseover = onMouseOver;
+        domElement.onmouseout = onMouseOut;
+        domElement.oncontextmenu = returnFalse;
 
         this.x = 0;
         this.y = 0;
         this.px = 0;
         this.py = 0;
+        this.isin = false;
         this.buttons = 0;
         this.onmove = null;
         this.ondrag = null;

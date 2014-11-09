@@ -12,7 +12,7 @@ define('app.drawing', [
         mouse.ondown = function(button, x, y) {
             var lineWidth = button ? 60 : 10;
             if (mazeContext) {
-                var style = button ? 'white' : 'red';
+                var style = button ? 'white' : 'darkgreen';
                 mazeContext.fillStyle = style;
                 mazeContext.strokeStyle = style;
                 mazeContext.lineWidth = lineWidth;
