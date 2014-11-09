@@ -171,7 +171,11 @@ define('App', [
             updater.stop();
         }
         function doReset() {
-            reset();
+            if (updater.running) {
+                reset();
+            } else {
+                solver = null;
+            }
         }
 
         this.doStart = doStart;

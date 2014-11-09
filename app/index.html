@@ -18,9 +18,14 @@
             vertical-align: top;
         }
         #controls {
+            text-align: left;
+            width: 100px;
             display: inline-block;
             border: 1px solid black;
             vertical-align: top;
+        }
+        #controls button {
+            width: 50%;
         }
         .container {
             text-align: center;
@@ -34,8 +39,10 @@
             <button onclick="doStart()">Start</button><br>
             <button onclick="doStop()">Stop</button><br>
             <button onclick="doReset()">Reset</button><br>
-            <div>Samples took: <span id="samplesTook"></span></div>
-            <div>Found cost: <span id="solutionCost"></span></div>
+            <div>Samples took:</div>
+            <div id="samplesTook"></div>
+            <div>Found cost:</div>
+            <div id="solutionCost"></div>
         </div>
     </div>
 
