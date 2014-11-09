@@ -71,12 +71,12 @@ define('App', [
             for (var i = 0; i < 20; i++) {
                 putRandomDot();
             }
-            if (reddots.length > redCount) {
-                reddots.splice(0, reddots.length - redCount);
-            }
         }
         function update(time) {
-            for (var i = 0; i < 5; i++) {
+            if (reddots){
+                reddots.length = 0;
+            }
+            for (var i = 0; i < 10; i++) {
                 iterate();
             }
         }
@@ -221,7 +221,7 @@ define('App', [
         function doStart() {
             if (updater.running || !quad) reset();
             mazeMapFn = maps.fromCanvas(mazeCanvas, mazeCtx).fn;
-            updater.start(50);
+            updater.start(200);
         }
         function doStop() {
             updater.stop();
