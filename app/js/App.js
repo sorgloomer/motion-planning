@@ -1,11 +1,21 @@
 define('App', [
-    'imgConvert', 'imgLoad',
-    'app.drawing', 'utils', 'planning.maps', 'Interval',
-    'planning.rrt_inc'
+    'imgConvert',
+    'imgLoad',
+    'app.drawing',
+    'utils',
+    'planning.maps',
+    'Interval',
+    'planning.rrt_voronoi',
+    'NBox'
 ], function(
-    imgConvert, imgLoad,
-    drawing, utils, maps, Interval,
-    rrt_inc
+    imgConvert,
+    imgLoad,
+    drawing,
+    utils,
+    maps,
+    Interval,
+    SelectedAlgorithm,
+    NBox
 ) {
 
     function App() {
@@ -42,11 +52,12 @@ define('App', [
                 samplesTook++;
                 return mazeMapFn(dot[0], dot[1]);
             }
-            solver = new rrt_inc({
+            solver = new SelectedAlgorithm({
                 sampler: sampler,
                 start: start,
                 target: target,
-                resolution: 10
+                resolution: 10,
+                nbox: new NBox([0, 0], [640, 480])
             });
             solver.setWrongSampleCallback(putRedDot);
         }

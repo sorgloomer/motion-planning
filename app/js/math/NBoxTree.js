@@ -1,5 +1,5 @@
 
-define('NBoxTree', [], function() {
+define('NBoxTree', [ 'vec' ], function(vec) {
     function Node(nbox) {
         this.nbox = nbox;
         this.ch = null;
@@ -9,6 +9,7 @@ define('NBoxTree', [], function() {
     function NBoxTree(nbox) {
         this.root = new Node(nbox);
         this.maxcnt = 3;
+        this.count = 0;
     }
 
     NBoxTree.Node = Node;
@@ -71,7 +72,47 @@ define('NBoxTree', [], function() {
         bound(this.root);
     };
 
+    NBoxTreeProto.nearest = function(dot) {
+        var currentBest = null;
+        var currentRadius2 = 0;
+
+        var visitCnt = 0;
+
+        function visit(savedDot) {
+            visitCnt++;
+            var dist2 = vec.dist2(savedDot, dot);
+            if (currentBest === null || dist2 < currentRadius2) {
+                currentBest = savedDot;
+                currentRadius2 = dist2;
+            }
+        }
+        function intrav(node) {
+            if (node.nbox.contains(dot)) {
+                bound(node);
+            }
+        }
+        function outtrav(node) {
+            if ((currentBest === null || node.nbox.dist2(dot) < currentRadius2)
+                && !node.nbox.contains(dot)) {
+                bound(node);
+            }
+        }
+        function bound(node) {
+            var ch = node.ch, dots = node.dots;
+            if (ch) {
+                ch.forEach(intrav);
+                ch.forEach(outtrav);
+            }
+            if (dots) {
+                dots.forEach(visit);
+            }
+        }
+        bound(this.root);
+        console.log(visitCnt + " / " + this.count);
+        return currentBest;
+    };
     NBoxTreeProto.putDot = function(dot) {
+        this.count++;
         return this.root.putDot(dot, 0, this.maxcnt);
     };
 

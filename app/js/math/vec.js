@@ -23,12 +23,30 @@ define('vec', [], function() {
         var r = alloc(a.length);
         return subTo(r, a, b);
     }
+    function lerpTo(to, a, b, t) {
+        var it = 1 - t;
+        for (var i = 0, mi = a.length; i < mi; i++) {
+            to[i] = a[i] * it + b[i] * t;
+        }
+        return to;
+    }
     function dot(a, b) {
         var res = 0;
         for (var i = 0, mi = a.length; i < mi; i++) {
             res += a[i] * b[i];
         }
         return res;
+    }
+    function scale(v, s, outp) {
+        if (outp) {
+            copyTo(outp, v)
+        } else {
+            outp = copy(v);
+        }
+        for (var i = 0, mi = outp.length; i < mi; i++) {
+            outp[i] *= s;
+        }
+        return outp;
     }
     function len2(a) {
         var res = 0, ai;
@@ -81,8 +99,12 @@ define('vec', [], function() {
         copy: copy,
         copyTo: copyTo,
 
+        scale: scale,
+        lerpTo: lerpTo,
+
         dot: dot,
         add: add,
+        addTo: addTo,
         sub: sub,
         subTo: subTo,
         len: len,
