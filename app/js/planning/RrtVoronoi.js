@@ -15,7 +15,7 @@ define('planning.RrtVoronoi', [
         var boxTree = new NBoxTree(map.nbox);
         var resolution = map.resolution;
         var resolution2 = resolution * resolution;
-        var greediness = 0.3;
+        var greediness = 0.25;
 
         var tempDot = vec.alloc(dims);
 

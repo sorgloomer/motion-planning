@@ -1,17 +1,24 @@
 define('App', [
-    'utils.imgConvert', 'utils.imgLoad', 'utils.utils', 'utils.Interval',
+    'utils.imgConvert', 'utils.imgLoad', 'utils.utils', 'utils.Interval', 'utils.StringMap',
     'app.drawing',
     'planning.maps', 'planning.RrtInc', 'planning.RrtVoronoi', 'planning.Prm',
     'math.NBox'
 ], function(
-    imgConvert, imgLoad, utils, Interval,
+    imgConvert, imgLoad, utils, Interval, StringMap,
     drawing,
     maps, RrtInc, RrtVoronoi, Prm,
     NBox
 ) {
-    var SelectedAlgorithm = Prm;
+    var algorithms = {
+        'rrt-inc': RrtInc,
+        'rrt-voronoi': RrtVoronoi,
+        'prm': Prm
+    };
 
-    function App() {
+    function App(imageUrl) {
+        var SelectedAlgorithm = Prm;
+
+        if (imageUrl === undefined) imageUrl = 'img/map1.png';
 
         var screencanvas = document.getElementById("maincanvas");
         screencanvas.width = 640;
@@ -55,18 +62,25 @@ define('App', [
             solver.wrongSampleCallback = putRedDot;
         }
 
-        var mazeCanvas = imgLoad.asCanvas('img/map.png', function(pCanvas, pCtx) {
-            screencanvas.width = screenctx.width = pCanvas.width;
-            screencanvas.height = screenctx.height = pCanvas.height;
-            mazeCtx = pCtx;
-            drawingMouse = drawing.attach(mazeCtx);
-        });
+        var mazeCanvas = null;
+
+        function loadMapFromUrl(url, cb) {
+            mazeCanvas = imgLoad.asCanvas(url, function (pCanvas, pCtx) {
+                screencanvas.width = screenctx.width = pCanvas.width;
+                screencanvas.height = screenctx.height = pCanvas.height;
+                mazeCtx = pCtx;
+                drawingMouse = drawing.attach(mazeCtx);
+                if (cb) cb();
+            });
+        }
+
+        loadMapFromUrl(imageUrl);
 
 
         function update(time) {
             if (!solution) {
                 reddots.length = 0;
-                for (var i = 0; i < 5; i++) {
+                for (var i = 0; i < 1; i++) {
                     solver.iterate();
                 }
                 if (solver.hasSolution) {
@@ -184,9 +198,25 @@ define('App', [
             }
         }
 
+        function selectMap(imgUrl) {
+            var running = updater.running;
+            doStop();
+            loadMapFromUrl(imgUrl, function() {
+                doReset();
+                if (running) doStart();
+            });
+        }
+
+        function selectAlgorithm(algorithmId) {
+            SelectedAlgorithm = StringMap.get(algorithms, algorithmId);
+            doReset();
+        }
+
         this.doStart = doStart;
         this.doStop = doStop;
         this.doReset = doReset;
+        this.selectMap = selectMap;
+        this.selectAlgorithm = selectAlgorithm;
     }
 
 

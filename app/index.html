@@ -19,13 +19,14 @@
         }
         #controls {
             text-align: left;
-            width: 100px;
+            width: 220px;
             display: inline-block;
             border: 1px solid black;
+            padding: 5px;
             vertical-align: top;
         }
         #controls button {
-            width: 50%;
+            width: 30%;
         }
 
         #controls {
@@ -42,13 +43,29 @@
     <div class="container">
         <canvas id="maincanvas" class="noselect"></canvas>
         <div id="controls">
-            <button onclick="app.doStart()">Start</button><br>
-            <button onclick="app.doStop()">Stop</button><br>
-            <button onclick="app.doReset()">Reset</button><br>
-            <div>Samples took:</div>
-            <div id="samplesTook"></div>
-            <div>Found cost:</div>
-            <div id="solutionCost"></div>
+            <button onclick="app.doStart()">Start</button>
+            <button onclick="app.doStop()">Stop</button>
+            <button onclick="app.doReset()">Reset</button>
+            <div>
+                <div style="display: inline-block;">
+                    <div>Samples took:</div>
+                    <div>Found cost:</div>
+                </div>
+                <div style="display: inline-block;">
+                    <div id="samplesTook"></div>
+                    <div id="solutionCost"></div>
+                </div>
+            </div>
+            <img src="img/thumb1.png" onclick="app.selectMap('img/map1.png');"/>
+            <img src="img/thumb2.png" onclick="app.selectMap('img/map2.png');"/>
+            <img src="img/thumb3.png" onclick="app.selectMap('img/map3.png');"/>
+            <img src="img/thumb4.png" onclick="app.selectMap('img/map4.png');"/>
+            <img src="img/thumb5.png" onclick="app.selectMap('img/map5.png');"/>
+            <br>
+
+            <input type="radio" name="algorithm" onclick="app.selectAlgorithm('prm');" checked> Prm<br>
+            <input type="radio" name="algorithm" onclick="app.selectAlgorithm('rrt-inc');"> Rrt-Inc<br>
+            <input type="radio" name="algorithm" onclick="app.selectAlgorithm('rrt-voronoi');"> Rrt-Voronoi<br>
         </div>
     </div>
 
@@ -72,6 +89,7 @@
     <script src="js/utils/UnionFind.js"></script>
     <script src="js/utils/MultiMap.js"></script>
     <script src="js/utils/Heap.js"></script>
+    <script src="js/utils/StringMap.js"></script>
 
     <script src="js/planning/maps.js"></script>
     <script src="js/planning/helper.js"></script>
