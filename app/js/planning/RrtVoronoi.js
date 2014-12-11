@@ -1,8 +1,10 @@
 define('planning.RrtVoronoi', [
-    'utils', 'vec', 'NBoxTree', 'NBox',
+    'utils.utils',
+    'math.vec', 'math.NBoxTree', 'math.NBox',
     'planning.helper'
 ], function(
-    utils, vec, NBoxTree, NBox,
+    utils,
+    vec, NBoxTree, NBox,
     helper
 ) {
 

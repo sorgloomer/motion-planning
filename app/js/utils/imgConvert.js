@@ -1,4 +1,4 @@
-define('imgConvert', [], function() {
+define('utils.imgConvert', [], function() {
     // Converts image to canvas; returns new canvas element
     function imageToCanvas(image) {
         var canvas = document.createElement("canvas");

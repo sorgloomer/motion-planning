@@ -1,7 +1,7 @@
 /**
  * Created by Hege on 2014.11.07..
  */
-define('planning.maps', [ 'imgConvert' ], function(imgConvert) {
+define('planning.maps', [ 'utils.imgConvert' ], function(imgConvert) {
 
     function BoolArr(length) {
         return new Uint8Array(length);

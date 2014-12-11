@@ -1,5 +1,5 @@
 define('planning.helper', [
-    'utils', 'vec'
+    'utils.utils', 'math.vec'
 ], function(utils, vec) {
     var temp1 = new Array(4);
 

@@ -2,7 +2,7 @@
  * Created by Hege on 2014.09.28..
  */
 
-define('NBox', ['vec'], function(vec) {
+define('math.NBox', ['math.vec'], function(vec) {
     function NBox(min, max) {
         this.min = min;
         this.max = max;

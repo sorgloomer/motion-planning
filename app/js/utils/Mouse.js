@@ -2,7 +2,7 @@
  * Created by Hege on 2014.09.28..
  */
 
-define('Mouse', [ 'time' ], function(time) {
+define('utils.Mouse', [ 'utils.time' ], function(time) {
 
     function returnFalse() { return false; }
 

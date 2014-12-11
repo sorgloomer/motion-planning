@@ -1,15 +1,13 @@
 define('planning.Prm', [
-    'utils', 'vec', 'NBoxTree', 'NBox',
+    'utils.utils',
+    'math.vec', 'math.NBoxTree', 'math.NBox',
     'planning.helper',
-    'utils.UnionFind',
-    'utils.MultiMap',
-    'utils.Heap'
+    'utils.UnionFind', 'utils.MultiMap', 'utils.Heap'
 ], function(
-    utils, vec, NBoxTree, NBox,
+    utils,
+    vec, NBoxTree, NBox,
     helper,
-    UnionFind,
-    MultiMap,
-    Heap
+    UnionFind, MultiMap, Heap
 ) {
 
     function Prm(map) {
@@ -17,7 +15,8 @@ define('planning.Prm', [
         var dims = map.nbox.dims();
         var boxTree = new NBoxTree(map.nbox);
         var resolution = map.resolution;
-        var connectResolution = resolution * 2;
+        // Use hypersphere 4 times the volume of the resolution sphere
+        var connectResolution = resolution * Math.pow(4, 1.0 / dims);
 
         var connectedSets = new UnionFind();
         var neighboursMap = new MultiMap();

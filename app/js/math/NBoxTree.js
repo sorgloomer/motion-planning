@@ -1,5 +1,5 @@
 
-define('NBoxTree', [ 'vec' ], function(vec) {
+define('math.NBoxTree', [ 'math.vec' ], function(vec) {
     function Node(nbox) {
         this.nbox = nbox;
         this.ch = null;
@@ -108,7 +108,6 @@ define('NBoxTree', [ 'vec' ], function(vec) {
             }
         }
         bound(this.root);
-        console.log(visitCnt + " / " + this.count);
         return currentBest;
     };
 

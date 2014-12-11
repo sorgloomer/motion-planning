@@ -1,7 +1,7 @@
 /**
  * Created by Hege on 2014.11.07..
  */
-define('utils', [], function() {
+define('utils.utils', [], function() {
     function byCmp(by) {
         return function(a, b) {
             var sa = a[by];

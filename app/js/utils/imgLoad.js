@@ -1,4 +1,4 @@
-define('imgLoad', [ 'imgConvert' ], function(imgConvert) {
+define('utils.imgLoad', [ 'utils.imgConvert' ], function(imgConvert) {
 
     function asImage(source, callback) {
         var img = new Image();

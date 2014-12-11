@@ -1,7 +1,7 @@
 /**
  * Created by Hege on 2014.11.07..
  */
-define('Interval', [], function() {
+define('utils.Interval', [], function() {
 
    function Interval(fn, defaultDelay) {
        var self = this;

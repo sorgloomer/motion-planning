@@ -2,7 +2,7 @@
  * Created by Hege on 2014.09.28..
  */
 
-define('vec', [], function() {
+define('math.vec', [], function() {
     function dims(a) {
         return a.length;
     }

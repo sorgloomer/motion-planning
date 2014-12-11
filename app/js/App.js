@@ -1,24 +1,12 @@
 define('App', [
-    'imgConvert',
-    'imgLoad',
+    'utils.imgConvert', 'utils.imgLoad', 'utils.utils', 'utils.Interval',
     'app.drawing',
-    'utils',
-    'planning.maps',
-    'Interval',
-    'planning.RrtInc',
-    'planning.RrtVoronoi',
-    'planning.Prm',
-    'NBox'
+    'planning.maps', 'planning.RrtInc', 'planning.RrtVoronoi', 'planning.Prm',
+    'math.NBox'
 ], function(
-    imgConvert,
-    imgLoad,
+    imgConvert, imgLoad, utils, Interval,
     drawing,
-    utils,
-    maps,
-    Interval,
-    RrtInc,
-    RrtVoronoi,
-    Prm,
+    maps, RrtInc, RrtVoronoi, Prm,
     NBox
 ) {
     var SelectedAlgorithm = Prm;
@@ -128,7 +116,7 @@ define('App', [
                 screenctx.lineWidth = 2;
                 screenctx.strokeStyle = 'red';
                 drawLineStrip(screenctx, solution.path);
-                redrawer.start(250);
+                redrawer.start(50);
             }
         }
 
@@ -168,7 +156,7 @@ define('App', [
             draw(time);
         }
         var redrawer = new Interval(onRedraw, 20);
-        redrawer.start();
+        redrawer.start(50);
 
 
         function onUpdate() {

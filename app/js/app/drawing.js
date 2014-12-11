@@ -2,7 +2,7 @@
  * Created by Hege on 2014.11.07..
  */
 define('app.drawing', [
-    'Mouse'
+    'utils.Mouse'
 ], function(
     Mouse
 ) {

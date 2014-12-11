@@ -2,7 +2,7 @@
  * Created by Hege on 2014.09.27..
  */
 
-define('Geom', [], function() {
+define('math.Geom', [], function() {
     function dist2(x0, y0, x1, y1) {
         var dx = x1 - x0, dy = y1 - y0;
         return dx * dx + dy * dy;
