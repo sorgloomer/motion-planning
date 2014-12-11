@@ -67,7 +67,7 @@ define('planning.RrtVoronoi', [
             if (knownDistance > resolution) {
                 stepInDirectionTo(tempDot, nearest, tempDot, resolution, knownDistance);
 
-                var hitsWall = helper.checkLine(map.sampler, nearest, tempDot, 1, knownDistance);
+                var hitsWall = helper.checkLine(map.sampler, nearest, tempDot, 1, resolution);
                 if (!hitsWall) {
                     goodSample = true;
                     putDot(vec.copy(tempDot), nearest);
