@@ -3,10 +3,11 @@
  */
 define('Interval', [], function() {
 
-   function Interval(fn) {
+   function Interval(fn, defaultDelay) {
        var self = this;
        function start(delay) {
            stop();
+           if (delay === undefined) delay = defaultDelay;
            self.id = setInterval(fn, delay);
            self.running = true;
        }

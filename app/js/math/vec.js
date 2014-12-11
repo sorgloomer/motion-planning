@@ -3,6 +3,10 @@
  */
 
 define('vec', [], function() {
+    function dims(a) {
+        return a.length;
+    }
+
     function addTo(to, a, b) {
         for (var i = 0, mi = a.length; i < mi; i++) {
             to[i] = a[i] + b[i];
@@ -59,9 +63,10 @@ define('vec', [], function() {
         return Math.sqrt(len2(a));
     }
     function dist2(a, b) {
-        var res = 0, ai;
+        var res = 0;
         for (var i = 0, mi = a.length; i < mi; i++) {
-            res += (ai = (a[i] - b[i])) * ai;
+            var ai = a[i] - b[i];
+            res += ai * ai;
         }
         return res;
     }
@@ -95,6 +100,7 @@ define('vec', [], function() {
         alloc: alloc,
         zero: zero,
         unit: unit,
+        dims: dims,
 
         copy: copy,
         copyTo: copyTo,

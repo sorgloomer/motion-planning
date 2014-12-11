@@ -5,7 +5,9 @@ define('App', [
     'utils',
     'planning.maps',
     'Interval',
-    'planning.rrt_voronoi',
+    'planning.RrtInc',
+    'planning.RrtVoronoi',
+    'planning.Prm',
     'NBox'
 ], function(
     imgConvert,
@@ -14,9 +16,12 @@ define('App', [
     utils,
     maps,
     Interval,
-    SelectedAlgorithm,
+    RrtInc,
+    RrtVoronoi,
+    Prm,
     NBox
 ) {
+    var SelectedAlgorithm = Prm;
 
     function App() {
 
@@ -123,6 +128,7 @@ define('App', [
                 screenctx.lineWidth = 2;
                 screenctx.strokeStyle = 'red';
                 drawLineStrip(screenctx, solution.path);
+                redrawer.start(250);
             }
         }
 
@@ -161,8 +167,8 @@ define('App', [
             var time = Date.now() * 0.001;
             draw(time);
         }
-        var redrawer = new Interval(onRedraw);
-        redrawer.start(20);
+        var redrawer = new Interval(onRedraw, 20);
+        redrawer.start();
 
 
         function onUpdate() {
@@ -172,11 +178,12 @@ define('App', [
             }
             document.getElementById('samplesTook').textContent = '' + samplesTook;
         }
-        var updater = new Interval(onUpdate);
+        var updater = new Interval(onUpdate, 50);
 
         function doStart() {
             if (updater.running || !solver) reset();
-            updater.start(50);
+            updater.start();
+            redrawer.start();
         }
         function doStop() {
             updater.stop();

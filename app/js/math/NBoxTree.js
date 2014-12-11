@@ -111,6 +111,54 @@ define('NBoxTree', [ 'vec' ], function(vec) {
         console.log(visitCnt + " / " + this.count);
         return currentBest;
     };
+
+    NBoxTreeProto.hasInRange = function(p, dist) {
+        var dist2 = dist * dist;
+        var result = false;
+        function visit(dot) {
+            if (!result && vec.dist2(dot, p) <= dist2) {
+                result = true;
+            }
+        }
+        function bound(node) {
+            if (node.nbox.dist2(p) <= dist2) {
+                var ch = node.ch;
+                var dots = node.dots;
+                if (dots) {
+                    dots.forEach(visit);
+                }
+                if (!result && ch) {
+                    ch.forEach(bound);
+                }
+            }
+        }
+        bound(this.root);
+        return result;
+    };
+
+    NBoxTreeProto.enumerateInRange = function(p, maxDist, fn, ctx) {
+        var maxDist2 = maxDist * maxDist;
+        function visit(dot) {
+            var actualDist2 = vec.dist2(dot, p);
+            if (actualDist2 <= maxDist2) {
+                fn.call(ctx, dot, actualDist2);
+            }
+        }
+        function bound(node) {
+            if (node.nbox.dist2(p) <= maxDist2) {
+                var ch = node.ch;
+                var dots = node.dots;
+                if (dots) {
+                    dots.forEach(visit);
+                }
+                if (ch) {
+                    ch.forEach(bound);
+                }
+            }
+        }
+        bound(this.root);
+    };
+
     NBoxTreeProto.putDot = function(dot) {
         this.count++;
         return this.root.putDot(dot, 0, this.maxcnt);

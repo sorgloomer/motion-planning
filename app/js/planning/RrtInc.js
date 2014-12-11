@@ -1,6 +1,10 @@
-define('planning.rrt_inc', [
-    'utils', 'vec', 'NBoxTree', 'NBox'
-], function(utils, vec, NBoxTree, NBox) {
+define('planning.RrtInc', [
+    'utils', 'vec', 'NBoxTree', 'NBox',
+    'planning.helper'
+], function(
+    utils, vec, NBoxTree, NBox,
+    helper
+) {
 
 
     var itemCmp = utils.byCmp("score");
@@ -129,23 +133,16 @@ define('planning.rrt_inc', [
         }
 
         function getSolution() {
-            var p = solutionSample;
-            if (p) {
-                var path = [];
-                var totalLength = 0;
-                for(;;) {
-                    path.unshift(p.pos);
-                    if (!p.parent) break;
-                    totalLength += vec.dist(p.pos, p.parent.pos);
-                    p = p.parent;
-                }
-                return {
-                    cost: totalLength,
-                    path: path
-                };
-            } else {
-                return null;
+            function parent(item) {
+                return item.parent;
             }
+            function cost(a, b) {
+                return vec.dist(a.pos, b.pos);
+            }
+            function mapToPos(item) {
+                return item.pos;
+            }
+            return helper.pathToRoot(parent, solutionSample, cost, mapToPos);
         }
 
         this.setWrongSampleCallback = setWrongSampleCallback;

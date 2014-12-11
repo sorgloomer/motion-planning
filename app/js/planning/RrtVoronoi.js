@@ -1,6 +1,10 @@
-define('planning.rrt_voronoi', [
-    'utils', 'vec', 'NBoxTree', 'NBox'
-], function(utils, vec, NBoxTree, NBox) {
+define('planning.RrtVoronoi', [
+    'utils', 'vec', 'NBoxTree', 'NBox',
+    'planning.helper'
+], function(
+    utils, vec, NBoxTree, NBox,
+    helper
+) {
 
     function RrtVoronoi(map) {
 
@@ -11,7 +15,6 @@ define('planning.rrt_voronoi', [
         var greediness = 0.3;
 
         var tempDot = vec.alloc(dims);
-        var tempDot2 = vec.alloc(dims);
 
         var solutionNode = null;
         var parentMap = new Map();
@@ -22,12 +25,6 @@ define('planning.rrt_voronoi', [
 
         putDot(map.start, null);
 
-        function randomDotInBox(nbox, dot) {
-            for (var i = 0; i < dims; i++) {
-                dot[i] = Math.random() * nbox.width(i) + nbox.min[i];
-            }
-            return dot;
-        }
 
         function putDot(dot, parent) {
             boxTree.putDot(dot);
@@ -42,32 +39,33 @@ define('planning.rrt_voronoi', [
             }
         }
 
+        function stepInDirectionTo(outp, from, to, maxDistance, knownDistance) {
+            if (knownDistance === undefined) knownDistance = vec.dist(from, to);
+            vec.lerpTo(outp, from, to, maxDistance / knownDistance);
+        }
+
+        function stepLimitedInDirectionTo(outp, from, to, maxDistance, knownDistance) {
+            if (knownDistance === undefined) knownDistance = vec.dist(from, to);
+            if (knownDistance > maxDistance) {
+                vec.lerpTo(outp, from, to, maxDistance / knownDistance);
+            } else if (outp !== to) vec.copyTo(outp, to);
+        }
+
         function putRandomDot() {
             if (Math.random() < greediness) {
                 vec.copyTo(tempDot, map.target);
             } else {
-                randomDotInBox(map.nbox, tempDot);
+                helper.randomDotInBox(map.nbox, tempDot, dims);
             }
             var nearest = boxTree.nearest(tempDot);
-            var veclen = vec.dist(nearest, tempDot);
+            var knownDistance = vec.dist(nearest, tempDot);
             var goodSample = false;
 
-            if (veclen > resolution) {
-                vec.subTo(tempDot, tempDot, nearest);
-                var scale = resolution / veclen;
-                vec.scale(tempDot, scale, tempDot);
-                vec.addTo(tempDot, tempDot, nearest);
+            if (knownDistance > resolution) {
+                stepInDirectionTo(tempDot, nearest, tempDot, resolution, knownDistance);
 
-                var inc = 1.0 / resolution;
-                var inters = true;
-                for (var i = 0; i < 1; i += inc) {
-                    vec.lerpTo(tempDot2, nearest, tempDot, i);
-                    if (map.sampler(tempDot2)) {
-                        inters = false;
-                        break;
-                    }
-                }
-                if (inters && !map.sampler(tempDot)) {
+                var hitsWall = helper.checkLine(map.sampler, nearest, tempDot, 1, knownDistance);
+                if (!hitsWall) {
                     goodSample = true;
                     putDot(vec.copy(tempDot), nearest);
                 }
@@ -90,24 +88,7 @@ define('planning.rrt_voronoi', [
         }
 
         function getSolution() {
-            var p = solutionNode;
-            if (p) {
-                var path = [];
-                var totalLength = 0;
-                for(;;) {
-                    path.unshift(p);
-                    var parent = parentMap.get(p);
-                    if (!parent) break;
-                    totalLength += vec.dist(p, parent);
-                    p = parent;
-                }
-                return {
-                    cost: totalLength,
-                    path: path
-                };
-            } else {
-                return null;
-            }
+            return helper.pathToRoot(parentMap, solutionNode, vec.dist);
         }
 
         function setWrongSampleCallback(cb) {
