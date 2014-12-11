@@ -48,12 +48,14 @@
             <button onclick="app.doReset()">Reset</button>
             <div>
                 <div style="display: inline-block;">
+                    <div>Samples generated:</div>
                     <div>Samples took:</div>
                     <div>Found cost:</div>
                 </div>
                 <div style="display: inline-block;">
+                    <div id="samplesGenerated"></div>
                     <div id="samplesTook"></div>
-                    <div id="solutionCost"></div>
+                    <div id="solutionCost">-</div>
                 </div>
             </div>
             <img src="img/thumb1.png" onclick="app.selectMap('img/map1.png');"/>

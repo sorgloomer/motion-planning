@@ -58,6 +58,7 @@ define('planning.RrtVoronoi', [
                 vec.copyTo(tempDot, map.target);
             } else {
                 helper.randomDotInBox(map.nbox, tempDot, dims);
+                self.samplesGenerated++;
             }
             var nearest = boxTree.nearest(tempDot);
             var knownDistance = vec.dist(nearest, tempDot);
@@ -86,6 +87,7 @@ define('planning.RrtVoronoi', [
             return helper.pathToRoot(parentMap, solutionNode, vec.dist);
         }
 
+        this.samplesGenerated = 0;
         this.continueForever = false;
         this.edges = edges;
         this.samples = samples;

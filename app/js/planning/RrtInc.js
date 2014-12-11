@@ -21,8 +21,8 @@ define('planning.RrtInc', [
         var trialCount = 0;
         var target = map.target;
 
-        var mdist = map.resolution;
-        var mdist2 = mdist * mdist * 0.95;
+        var resolution = map.resolution;
+        var resolution2 = resolution * resolution * 0.95;
 
         var localSampler = map.sampler;
 
@@ -45,12 +45,12 @@ define('planning.RrtInc', [
         function hasNear(p) {
             var result = false;
             function visit(dot) {
-                if (vec.dist2(dot, p) < mdist2) {
+                if (vec.dist2(dot, p) < resolution2) {
                     result = true;
                 }
             }
             quad.traverse(function(node) {
-                if (result || node.nbox.dist2(p) > mdist2) {
+                if (result || node.nbox.dist2(p) > resolution2) {
                     return true;
                 } else {
                     var dots = node.dots;
@@ -65,21 +65,14 @@ define('planning.RrtInc', [
 
         function verifyDot(item, u, edot) {
             var x = Math.cos(u), y = Math.sin(u);
-            var p = item.pos;
-            var dot, i;
-            edot[0] = p[0] + x * mdist;
-            edot[1] = p[1] + y * mdist;
+            self.samplesGenerated++;
 
-            for (i = 5; ; i += 5) {
-                if (i >= mdist) {
-                    return !localSampler(edot) && !hasNear(edot);
-                } else {
-                    dot = [p[0] + x * i, p[1] + y * i];
-                    if (localSampler(dot)) {
-                        return false;
-                    }
-                }
-            }
+            var p = item.pos;
+            edot[0] = p[0] + x * resolution;
+            edot[1] = p[1] + y * resolution;
+
+            return !hasNear(edot)
+                && !helper.checkLine(localSampler, p, edot, 1, resolution);
         }
 
         function putRandomDot() {
@@ -94,7 +87,7 @@ define('planning.RrtInc', [
             var dot = [0, 0];
             if (verifyDot(item, a, dot)) {
                 var newItem = putNewItemByPos(dot, item);
-                if (vec.dist2(dot, target) < mdist2) {
+                if (vec.dist2(dot, target) < resolution2) {
                     self.hasSolution = true;
                     solutionSample = newItem;
                 }
@@ -136,6 +129,7 @@ define('planning.RrtInc', [
             return helper.pathToRoot(parent, solutionSample, cost, mapToPos);
         }
 
+        this.samplesGenerated = 0;
         this.continueForever = false;
         this.hasSolution = false;
         this.wrongSampleCallback = null;

@@ -57,6 +57,7 @@ define('planning.Prm', [
         function putRandomDot() {
             var newDot = vec.alloc(dims);
             helper.randomDotInBox(map.nbox, newDot, dims);
+            self.samplesGenerated++;
             var nearest = boxTree.nearest(newDot);
             var goodSample = false;
             if (nearest) {
@@ -82,6 +83,7 @@ define('planning.Prm', [
             return helper.pathToRoot(parentMap, endNode, vec.dist);
         }
 
+        this.samplesGenerated = 0;
         this.hasSolution = false;
         this.continueForever = false;
         this.wrongSampleCallback = null;

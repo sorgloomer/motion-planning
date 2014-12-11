@@ -9,6 +9,7 @@ define('App', [
     maps, RrtInc, RrtVoronoi, Prm,
     NBox
 ) {
+    var CYCLE_SPEED = 10;
     var algorithms = {
         'rrt-inc': RrtInc,
         'rrt-voronoi': RrtVoronoi,
@@ -80,7 +81,7 @@ define('App', [
         function update(time) {
             if (!solution) {
                 reddots.length = 0;
-                for (var i = 0; i < 1; i++) {
+                for (var i = 0; i < CYCLE_SPEED; i++) {
                     solver.iterate();
                 }
                 if (solver.hasSolution) {
@@ -177,8 +178,10 @@ define('App', [
             var time = Date.now() * 0.001;
             if (solver) {
                 update(time);
+
+                document.getElementById('samplesTook').textContent = '' + samplesTook;
+                document.getElementById('samplesGenerated').textContent = '' + solver.samplesGenerated;
             }
-            document.getElementById('samplesTook').textContent = '' + samplesTook;
         }
         var updater = new Interval(onUpdate, 50);
 
