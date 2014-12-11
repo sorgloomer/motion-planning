@@ -27,6 +27,12 @@
         #controls button {
             width: 50%;
         }
+
+        #controls {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 8pt;
+        }
+
         .container {
             text-align: center;
         }
@@ -36,9 +42,9 @@
     <div class="container">
         <canvas id="maincanvas" class="noselect"></canvas>
         <div id="controls">
-            <button onclick="doStart()">Start</button><br>
-            <button onclick="doStop()">Stop</button><br>
-            <button onclick="doReset()">Reset</button><br>
+            <button onclick="app.doStart()">Start</button><br>
+            <button onclick="app.doStop()">Stop</button><br>
+            <button onclick="app.doReset()">Reset</button><br>
             <div>Samples took:</div>
             <div id="samplesTook"></div>
             <div>Found cost:</div>
@@ -79,9 +85,6 @@
     <script>
         var App = require('App');
         var app = new App();
-        var doStart = app.doStart;
-        var doStop = app.doStop;
-        var doReset = app.doReset;
     </script>
 
 </body>

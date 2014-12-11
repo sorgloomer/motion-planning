@@ -1,6 +1,6 @@
 define('planning.helper', [
-    'utils.utils', 'math.vec'
-], function(utils, vec) {
+    'utils.utils', 'utils.Heap', 'math.vec'
+], function(utils, Heap, vec) {
     var temp1 = new Array(4);
 
     function checkLine(sampler, start, end, step, knownDistance) {
@@ -60,9 +60,52 @@ define('planning.helper', [
         }
     }
 
+    function fnOrMap(fnOrMap) {
+        return typeof(fnOrMap) === 'function'
+            ? fnOrMap
+            : function mapGetter(key) { return fnOrMap.get(key); };
+    }
+
+    function dijkstra(startNode, endNode, neighboursFnOrMap, distFn) {
+        var item;
+        var queue = new Heap();
+        var parentMap = new Map();
+        neighboursFnOrMap = fnOrMap(neighboursFnOrMap);
+        queue.push(0, [null, startNode]);
+
+        while (item = queue.pop()) {
+            var current = item.value[1];
+            if (!parentMap.has(current)) {
+                parentMap.set(current, item.value[0]);
+                if (current === endNode) {
+                    break;
+                } else {
+                    var total = item.key;
+                    if (!item) break;
+
+                    neighboursFnOrMap(current).forEach(function (neigh) {
+                        var dist = distFn(current, neigh);
+                        queue.push(total + dist, [current, neigh]);
+                    });
+                }
+            }
+        }
+        return parentMap;
+    }
+
+    function iterate(self, fn, trialCount) {
+        if (trialCount === undefined) trialCount = 20;
+        for (var i = 0; i < trialCount && (!self.hasSolution || self.continueForever); i++) {
+            fn();
+        }
+    }
+
     return {
         checkLine: checkLine,
         randomDotInBox: randomDotInBox,
-        pathToRoot: pathToRoot
+        pathToRoot: pathToRoot,
+        iterate: iterate,
+        fnOrMap: fnOrMap,
+        dijkstra: dijkstra
     };
 });

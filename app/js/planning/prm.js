@@ -2,15 +2,16 @@ define('planning.Prm', [
     'utils.utils',
     'math.vec', 'math.NBoxTree', 'math.NBox',
     'planning.helper',
-    'utils.UnionFind', 'utils.MultiMap', 'utils.Heap'
+    'utils.UnionFind', 'utils.MultiMap'
 ], function(
     utils,
     vec, NBoxTree, NBox,
     helper,
-    UnionFind, MultiMap, Heap
+    UnionFind, MultiMap
 ) {
 
     function Prm(map) {
+        var self = this;
 
         var dims = map.nbox.dims();
         var boxTree = new NBoxTree(map.nbox);
@@ -22,7 +23,6 @@ define('planning.Prm', [
         var neighboursMap = new MultiMap();
         var edges = [];
         var samples = [];
-        var bHasSolution = false;
 
         var startNode = vec.copy(map.target);
         var endNode = vec.copy(map.start);
@@ -36,11 +36,9 @@ define('planning.Prm', [
             connectedSets.union(a, b);
             edges.push([{pos:a}, {pos:b}]);
             if (connectedSets.same(startNode, endNode)) {
-                bHasSolution = true;
+                self.hasSolution = true;
             }
         }
-
-        var wrongSampleCallback = null;
 
         function putDot(dot) {
             boxTree.putDot(dot);
@@ -70,55 +68,26 @@ define('planning.Prm', [
                     }
                 }
             }
-            if (!goodSample && wrongSampleCallback) {
-                wrongSampleCallback(newDot);
+            if (!goodSample && self.wrongSampleCallback) {
+                self.wrongSampleCallback(newDot);
             }
         }
-
 
         function iterate(trialCount) {
-            trialCount = trialCount || 20;
-            for (var i = 0; i < trialCount; i++) {
-                putRandomDot();
-            }
-        }
-
-        function setWrongSampleCallback(cb) {
-            wrongSampleCallback = cb;
-        }
-        
-        function hasSolution() {
-            return bHasSolution;
+            helper.iterate(self, putRandomDot, trialCount);
         }
 
         function getSolution() {
-            var item;
-            var queue = new Heap();
-            var parentMap = new Map();
-
-            queue.push(0, [null, startNode]);
-            while (item = queue.pop()) {
-                var current = item.value[1];
-                if (!parentMap.has(current)) {
-                    parentMap.set(current, item.value[0]);
-                    var total = item.key;
-                    if (!item) break;
-
-                    neighboursMap.get(current).forEach(function (neigh) {
-                        var dist = vec.dist(current, neigh);
-                        queue.push(total + dist, [current, neigh]);
-                    });
-                }
-            }
-
+            var parentMap = helper.dijkstra(startNode, endNode, neighboursMap, vec.dist);
             return helper.pathToRoot(parentMap, endNode, vec.dist);
         }
 
+        this.hasSolution = false;
+        this.continueForever = false;
+        this.wrongSampleCallback = null;
         this.edges = edges;
         this.samples = samples;
-        this.setWrongSampleCallback = setWrongSampleCallback;
         this.iterate = iterate;
-        this.hasSolution = hasSolution;
         this.getSolution = getSolution;
     }
     return Prm;

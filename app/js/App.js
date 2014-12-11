@@ -52,7 +52,7 @@ define('App', [
                 resolution: 10,
                 nbox: new NBox([0, 0], [640, 480])
             });
-            solver.setWrongSampleCallback(putRedDot);
+            solver.wrongSampleCallback = putRedDot;
         }
 
         var mazeCanvas = imgLoad.asCanvas('img/map.png', function(pCanvas, pCtx) {
@@ -69,7 +69,7 @@ define('App', [
                 for (var i = 0; i < 5; i++) {
                     solver.iterate();
                 }
-                if (solver.hasSolution()) {
+                if (solver.hasSolution) {
                     solution = solver.getSolution();
                     document.getElementById('solutionCost').textContent = '' + solution.cost.toFixed(2);
                 }

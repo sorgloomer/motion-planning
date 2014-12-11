@@ -9,6 +9,7 @@ define('planning.RrtVoronoi', [
 ) {
 
     function RrtVoronoi(map) {
+        var self = this;
 
         var dims = map.nbox.dims();
         var boxTree = new NBoxTree(map.nbox);
@@ -23,8 +24,6 @@ define('planning.RrtVoronoi', [
         var edges = [];
         var samples = [];
 
-        var wrongSampleCallback = null;
-
         putDot(map.start, null);
 
 
@@ -33,6 +32,7 @@ define('planning.RrtVoronoi', [
             var len2 = vec.dist2(map.target, dot);
             if (len2 < resolution2) {
                 solutionNode = dot;
+                self.hasSolution = true;
             }
             if (parent) {
                 parentMap.set(dot, parent);
@@ -73,35 +73,25 @@ define('planning.RrtVoronoi', [
                 }
             }
 
-            if (!goodSample && wrongSampleCallback) {
-                wrongSampleCallback(vec.copy(tempDot));
+            if (!goodSample && self.wrongSampleCallback) {
+                self.wrongSampleCallback(vec.copy(tempDot));
             }
         }
 
         function iterate(trialCount) {
-            trialCount = trialCount || 20;
-            for (var i = 0; i < trialCount && !solutionNode; i++) {
-                putRandomDot();
-            }
-        }
-
-        function hasSolution() {
-            return !!solutionNode;
+            helper.iterate(self, putRandomDot, trialCount);
         }
 
         function getSolution() {
             return helper.pathToRoot(parentMap, solutionNode, vec.dist);
         }
 
-        function setWrongSampleCallback(cb) {
-            wrongSampleCallback = cb;
-        }
-
+        this.continueForever = false;
         this.edges = edges;
         this.samples = samples;
-        this.setWrongSampleCallback = setWrongSampleCallback;
+        this.wrongSampleCallback = null;
         this.iterate = iterate;
-        this.hasSolution = hasSolution;
+        this.hasSolution = false;
         this.getSolution = getSolution;
     }
 

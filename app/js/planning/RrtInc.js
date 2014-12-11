@@ -12,6 +12,7 @@ define('planning.RrtInc', [
     var itemCmp = utils.byCmp("score");
 
     function RrtInc(map) {
+        var self = this;
         var samples = this.samples = [];
         var edges = this.edges = [];
         this.map = map;
@@ -24,10 +25,8 @@ define('planning.RrtInc', [
         var mdist2 = mdist * mdist * 0.95;
 
         var localSampler = map.sampler;
-        var wrongSampleCallback = null;
 
         var solutionSample = null;
-
 
         putNewItemByPos(map.start, null);
 
@@ -96,11 +95,12 @@ define('planning.RrtInc', [
             if (verifyDot(item, a, dot)) {
                 var newItem = putNewItemByPos(dot, item);
                 if (vec.dist2(dot, target) < mdist2) {
+                    self.hasSolution = true;
                     solutionSample = newItem;
                 }
             } else {
-                if (wrongSampleCallback) {
-                    wrongSampleCallback(dot);
+                if (self.wrongSampleCallback) {
+                    self.wrongSampleCallback(dot);
                 }
                 item.fails++;
             }
@@ -116,22 +116,11 @@ define('planning.RrtInc', [
         }
 
         function iterate(sampleCnt) {
-            sampleCnt = sampleCnt || 20;
             samples.forEach(function(item) {
                 item.score = itemScore(item);
             });
             samples.sort(itemCmp);
-            for (var i = 0; i < sampleCnt && !solutionSample; i++) {
-                putRandomDot();
-            }
-        }
-
-        function setWrongSampleCallback(cb) {
-            wrongSampleCallback = cb;
-        }
-
-        function hasSolution() {
-            return !!solutionSample;
+            helper.iterate(self, putRandomDot, sampleCnt);
         }
 
         function getSolution() {
@@ -147,9 +136,10 @@ define('planning.RrtInc', [
             return helper.pathToRoot(parent, solutionSample, cost, mapToPos);
         }
 
-        this.setWrongSampleCallback = setWrongSampleCallback;
+        this.continueForever = false;
+        this.hasSolution = false;
+        this.wrongSampleCallback = null;
         this.iterate = iterate;
-        this.hasSolution = hasSolution;
         this.getSolution = getSolution;
     }
 
