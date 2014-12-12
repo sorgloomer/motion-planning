@@ -14,8 +14,14 @@ module.exports = function(grunt) {
                     keepalive: true
                 }
             }
+        },
+        sloc: {
+            app: {
+                files: { 'app': '**.js' }
+            }
         }
     });
 
-    grunt.registerTask('default', [ 'connect' ]);
+    grunt.registerTask('serve', [ 'sloc', 'connect' ])
+    grunt.registerTask('default', [ 'serve' ]);
 };

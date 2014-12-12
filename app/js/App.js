@@ -87,6 +87,7 @@ define('App', [
                 if (solver.hasSolution) {
                     solution = solver.getSolution();
                     document.getElementById('solutionCost').textContent = '' + solution.cost.toFixed(2);
+                    endCycle();
                 }
             }
         }
@@ -215,6 +216,42 @@ define('App', [
             doReset();
         }
 
+
+
+        var samplesLeft = 0;
+        var samplesArr = [];
+
+
+        function nextTick(fn) {
+            setTimeout(fn, 1);
+        }
+        function endCycle() {
+            if (samplesLeft > 0) {
+                samplesLeft--;
+                samplesArr.push({
+                    took: samplesTook,
+                    generated: solver.samplesGenerated,
+                    cost: solution.cost
+                });
+                nextTick(continueSamples);
+            } else {
+                console.log("SAMPLES");
+                console.log(samplesArr);
+            }
+        }
+        function continueSamples() {
+            doReset();
+            doStart();
+        }
+        function collectSamples(count) {
+            CYCLE_SPEED = 200;
+            samplesLeft = count;
+            samplesArr = [];
+            continueSamples();
+        }
+
+
+        this.collectSamples = collectSamples;
         this.doStart = doStart;
         this.doStop = doStop;
         this.doReset = doReset;
